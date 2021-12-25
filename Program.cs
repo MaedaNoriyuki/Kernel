@@ -102,8 +102,8 @@ namespace App
             }
             sp.Stop();
             Console.WriteLine(total);
+            Console.WriteLine($"List型 {sp.Elapsed.Minutes}[分]{sp.Elapsed.Seconds}[s]{sp.Elapsed.Milliseconds}[ms]");
             
-            Console.WriteLine($"List型{sp.Elapsed.Seconds}[s]{sp.Elapsed.Milliseconds}[ms]");
             sp.Restart();
             for(var i=0;i<10000;i++)
             {
@@ -112,14 +112,14 @@ namespace App
             }
             sp.Stop();
             Console.WriteLine(total);
-            
             Console.WriteLine($"Dict型{sp.Elapsed.Seconds}[s]{sp.Elapsed.Milliseconds}[ms]");
 
             sp.Restart();
             for(var i=0;i<10000;i++)
             {
                 //keyが無い場合には、例外発生
-                total +=  (double)(dataDict[ansList[i]] == null ? 0: dataDict[ansList[i]].date01);
+                if(dataDict.ContainsKey(ansList[i]))
+                    total +=  dataDict[ansList[i]].date01;
             }
             sp.Stop();
             Console.WriteLine(total);
@@ -128,7 +128,8 @@ namespace App
             sp.Restart();
             for(var i=0;i<10000;i++)
             {
-                total +=  (double)(sortList[ansList[i]] == null ? 0: dataDict[ansList[i]].date01);
+                if(sortList.ContainsKey(ansList[i]))
+                    total +=  dataDict[ansList[i]].date01;
             }
             sp.Stop();
             Console.WriteLine(total);
@@ -137,7 +138,8 @@ namespace App
             sp.Restart();
             for(var i=0;i<10000;i++)
             {
-                total +=  (double)(sortDict[ansList[i]] == null ? 0: dataDict[ansList[i]].date01);
+                if(sortDict.ContainsKey(ansList[i]))
+                total +=  dataDict[ansList[i]].date01;
             }
             sp.Stop();
             Console.WriteLine(total);
