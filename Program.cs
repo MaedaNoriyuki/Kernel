@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Collections;
 
 namespace App
 {
@@ -27,6 +28,8 @@ namespace App
             var dataDict = new Dictionary<DateTime,Data>();
             var sortList = new SortedList<DateTime,Data>();
             var sortDict = new SortedDictionary<DateTime,Data>();
+            var hashTable = new Hashtable();        //object型を使用、非推奨
+
             var startTime = new DateTime(2021,12,24,0,0,0);       //開始時間
             Random rad = new Random();
             for(var i=0;i<60*60*24*10;i++)
@@ -80,6 +83,18 @@ namespace App
                     date09=rad.NextDouble(),
                     date10=rad.NextDouble(),
                 });
+                hashTable.Add(startTime,new Data(){
+                    date01=rad.NextDouble(),
+                    date02=rad.NextDouble(),
+                    date03=rad.NextDouble(),
+                    date04=rad.NextDouble(),
+                    date05=rad.NextDouble(),
+                    date06=rad.NextDouble(),
+                    date07=rad.NextDouble(),
+                    date08=rad.NextDouble(),
+                    date09=rad.NextDouble(),
+                    date10=rad.NextDouble(),
+                });
                 startTime = startTime.AddSeconds(1);
             }
 
@@ -87,7 +102,6 @@ namespace App
             List<DateTime> ansList = new List<DateTime>();
             for(var i=0;i<10000;i++)
             {
-
                 ansList.Add(new DateTime(2021,12,24,rad.Next(0,23),rad.Next(0,59),rad.Next(0,59)));
             }
 
@@ -100,8 +114,9 @@ namespace App
                 var value = data.FirstOrDefault(n=>n.time == ansList[i]);
                 total += value == null ? 0 : (double)(value.date01);
             }
-            sp.Stop();
+            
             Console.WriteLine(total);
+            sp.Stop();
             Console.WriteLine($"List型 {sp.Elapsed.Minutes}[分]{sp.Elapsed.Seconds}[s]{sp.Elapsed.Milliseconds}[ms]");
             
             sp.Restart();
@@ -110,8 +125,8 @@ namespace App
                 var value = dataDict.FirstOrDefault(n=>n.Key == ansList[i]);
                 total += value.Value == null ? 0 : (double)(value.Value.date01);
             }
-            sp.Stop();
             Console.WriteLine(total);
+            sp.Stop();
             Console.WriteLine($"Dict型{sp.Elapsed.Seconds}[s]{sp.Elapsed.Milliseconds}[ms]");
 
             sp.Restart();
@@ -121,8 +136,8 @@ namespace App
                 if(dataDict.ContainsKey(ansList[i]))
                     total +=  dataDict[ansList[i]].date01;
             }
-            sp.Stop();
             Console.WriteLine(total);
+            sp.Stop();
             Console.WriteLine($"Dict型{sp.Elapsed.Seconds}[s]{sp.Elapsed.Milliseconds}[ms]");
 
             sp.Restart();
@@ -131,8 +146,8 @@ namespace App
                 if(sortList.ContainsKey(ansList[i]))
                     total +=  dataDict[ansList[i]].date01;
             }
-            sp.Stop();
             Console.WriteLine(total);
+            sp.Stop();
             Console.WriteLine($"sorttedList型{sp.Elapsed.Seconds}[s]{sp.Elapsed.Milliseconds}[ms]");
 
             sp.Restart();
@@ -141,10 +156,19 @@ namespace App
                 if(sortDict.ContainsKey(ansList[i]))
                 total +=  dataDict[ansList[i]].date01;
             }
-            sp.Stop();
             Console.WriteLine(total);
+            sp.Stop();
             Console.WriteLine($"sorttedDict型{sp.Elapsed.Seconds}[s]{sp.Elapsed.Milliseconds}[ms]");
 
+            sp.Restart();
+            for(var i=0;i<10000;i++)
+            {
+                if(hashTable.ContainsKey(ansList[i]))
+                total +=  ((Data)hashTable[ansList[i]]).date01;
+            }
+            Console.WriteLine(total);
+            sp.Stop();
+            Console.WriteLine($"hashTable型{sp.Elapsed.Seconds}[s]{sp.Elapsed.Milliseconds}[ms]");
 
             Console.ReadLine();
         }
